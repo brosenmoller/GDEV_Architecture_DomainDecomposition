@@ -1,0 +1,37 @@
+@startuml
+!theme carbon-gray
+
+class Player {
+  int health
+  WeaponManager WeaponManager;
+  KeepsakeManager KeepsakeManager;
+}
+
+struct Damage
+{
+  int mainDamage;
+  int backstabDamage;
+  bool isPoisned;
+}
+
+interface IDamageable
+{
+  void TakeDamage(Damage damage);
+}
+
+class Weapon
+{
+  void ApplyEffect(out Damage damage);
+}
+
+class WeaponManager
+{
+  unlockedWeapons[];
+  public equipedWeapons[];
+}
+
+Player *-- WeaponManager
+WeaponManager *-- Weapon
+
+
+@enduml
