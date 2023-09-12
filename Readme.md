@@ -1,9 +1,9 @@
 ## Links:
 
-# Plant UML
+### Plant UML
 https://www.planttext.com/
 https://plantuml.com/
 
-# Sources
+### Sources
 https://hades.fandom.com/wiki/Infernal_Arms#Weapons
 https://hades.fandom.com/wiki/Keepsakes
