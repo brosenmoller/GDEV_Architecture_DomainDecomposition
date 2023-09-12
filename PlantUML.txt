@@ -1,6 +1,14 @@
 @startuml
 !theme carbon-gray
 
+title Hades - UML
+header
+  Assignment for HKU Game Dev Architecture
+  Weapon System : Ben Rosenmöller
+  KeepsakeSystem : Joeri van Alphen
+endheader
+
+'General Code
 class Player
 {
   +int Health
@@ -8,6 +16,11 @@ class Player
   -KeepsakeManager keepsakeManager;
 }
 
+
+Player *-- WeaponManager
+Player *-- KeepsakeManager
+
+'Weapon System
 struct Damage
 {
   +int MainDamage;
@@ -31,6 +44,12 @@ class WeaponManager
   -Weapon[] equipedWeapons;
 }
 
+WeaponManager *-- Weapon
+Weapon .. Damage
+IDamageable .. Damage
+
+
+'KeepsakeSystem
 class KeepsakeManager
 {
   -Keepsake[] unlockedKeepsakes;
@@ -44,13 +63,6 @@ abstract class Keepsake
    +void ApplyEffect(...)
 }
 
-Player *-- WeaponManager
-WeaponManager *-- Weapon
-
-Player *-- KeepsakeManager
 KeepsakeManager *-- Keepsake
-
-Weapon .. Damage
-IDamageable .. Damage
 
 @enduml
