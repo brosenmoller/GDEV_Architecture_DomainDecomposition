@@ -49,20 +49,49 @@ Weapon .. Damage
 IDamageable .. Damage
 
 
-'KeepsakeSystem
+'Keepsake System
+interface IKeepsake
+{
+   +void Register();
+   +void Unregister();
+   -void OnEventCalled(KeepsakeContext context);
+}
+
 class KeepsakeManager
+{
+  -KeepsakeInventory Inventory;
+  -KeepsakeListener Listener;
+  -void OnEventCalled(KeepsakeContext context);
+}
+
+class KeepsakeInventory
 {
   -Keepsake[] unlockedKeepsakes;
   -Keepsake[] equipedKeepsakes;
   
-  +void ApplyEffect(...);
+  +void Add(Keepsake keepsake);
+  +void Set(int slot, Keepsake Keepsake);
 }
 
-abstract class Keepsake
+class KeepsakeListener
 {
-   +void ApplyEffect(...)
+  +Action<KeepsakeContext> OnEventCalled;
+  -void OnDamageDealt(HitInfo info);
+  -void OnSomethingHappened(Info info);
 }
 
-KeepsakeManager *-- Keepsake
+class KeepsakeContext
+{
+  +HealthContext Context;
+  +HitInfo Hit;
+}
+
+IKeepsake o-- KeepsakeContext
+KeepsakeManager *-- KeepsakeInventory
+KeepsakeManager *-- KeepsakeListener
+KeepsakeInventory *-- IKeepsake
+KeepsakeListener .. KeepsakeContext
+
+'Keepsake Variants
 
 @enduml
