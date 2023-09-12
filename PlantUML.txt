@@ -33,21 +33,40 @@ interface IDamageable
   +void TakeDamage(Damage damage);
 }
 
+struct WeaponData 
+{
+  int standardAttackDamage;
+  int specialAttackDamage;
+  int dashAttackDamage;
+}
+
 abstract class Weapon
 {
-  +void ApplyEffect(out Damage damage);
+  WeaponData baseWeaponData;
+  +abstract void ApplyEffect(out Damage damage);
+  +abstract void SpecialAttack();
+  +abstract void StandardAttack();
 }
+skinparam groupInheritance 10
+class StygianSword extends Weapon
+class VarathaSpear extends Weapon
+class AegisShield extends Weapon
+class CoronachBow extends Weapon
+class MalphonTwinfists extends Weapon
+class ExagryphGun extends Weapon
 
 class WeaponManager
 {
   -Weapon[] unlockedWeapons;
-  -Weapon[] equipedWeapons;
+  -Weapon equipedWeapon;
 }
 
-WeaponManager *-- Weapon
-Weapon .. Damage
-IDamageable .. Damage
+Weapon::baseWeaponData -r-> WeaponData 
 
+InputManager -> Weapon : Event Invoke
+WeaponManager *-- Weapon
+Damage -d-o Weapon
+Damage -l-o IDamageable
 
 'KeepsakeSystem
 class KeepsakeManager
