@@ -3,16 +3,16 @@
 
 class Player
 {
-  +int health
-  -WeaponManager WeaponManager;
-  -KeepsakeManager KeepsakeManager;
+  +int Health
+  -WeaponManager weaponManager;
+  -KeepsakeManager keepsakeManager;
 }
 
 struct Damage
 {
-  +int mainDamage;
-  +int backstabDamage;
-  +bool isPoisned;
+  +int MainDamage;
+  +int BackstabDamage;
+  +bool IsPoisned;
 }
 
 interface IDamageable
@@ -20,21 +20,21 @@ interface IDamageable
   +void TakeDamage(Damage damage);
 }
 
-class Weapon
+abstract class Weapon
 {
   +void ApplyEffect(out Damage damage);
 }
 
 class WeaponManager
 {
-  -unlockedWeapons[];
-  -equipedWeapons[];
+  -Weapon[] unlockedWeapons;
+  -Weapon[] equipedWeapons;
 }
 
 class KeepsakeManager
 {
-  -unlockedKeepsakes[];
-  -equipedKeepsakes[];
+  -Keepsake[] unlockedKeepsakes;
+  -Keepsake[] equipedKeepsakes;
   
   +void ApplyEffect(...);
 }
@@ -49,5 +49,8 @@ WeaponManager *-- Weapon
 
 Player *-- KeepsakeManager
 KeepsakeManager *-- Keepsake
+
+Weapon .. Damage
+IDamageable .. Damage
 
 @enduml
