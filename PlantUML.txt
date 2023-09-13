@@ -5,7 +5,7 @@ title Hades - UML
 header
   Assignment for HKU Game Dev Architecture
   Weapon System : Ben Rosenmöller
-  KeepsakeSystem : Joeri van Alphen
+  Keepsake System : Joeri van Alphen
 endheader
 
 'General Code
@@ -14,8 +14,8 @@ class Player
   +int Health
   -WeaponManager weaponManager;
   -KeepsakeManager keepsakeManager;
+  +void ProcessDamageEvent(DamageHitInfo _damageHitInfo)
 }
-
 
 Player *-- WeaponManager
 Player *-- KeepsakeManager
@@ -28,16 +28,27 @@ struct Damage
   +bool IsPoisned;
 }
 
-interface IDamageable
+struct DamageHitInfo 
 {
-  +void TakeDamage(Damage damage);
+  +bool BackstabDamage;
+  +bool RangedDamage;
+  +bool StandardAttackDamage;
+  +bool SpecialAttackDamage;
+  +bool DashAttackDamage;
+  +WeaponData WeaponData
+  +Enemy DamagedEnemy;
 }
 
 struct WeaponData 
 {
-  int standardAttackDamage;
-  int specialAttackDamage;
-  int dashAttackDamage;
+  +int StandardAttackDamage;
+  +int SpecialAttackDamage;
+  +int DashAttackDamage;
+}
+
+interface IDamageable
+{
+  +void TakeDamage(Damage damage);
 }
 
 abstract class Weapon
@@ -47,6 +58,7 @@ abstract class Weapon
   +abstract void SpecialAttack();
   +abstract void StandardAttack();
 }
+
 skinparam groupInheritance 10
 class StygianSword extends Weapon
 class VarathaSpear extends Weapon
@@ -61,7 +73,10 @@ class WeaponManager
   -Weapon equipedWeapon;
 }
 
-Weapon::baseWeaponData -r-> WeaponData 
+Weapon::baseWeaponData -r-> WeaponData
+Player::ProcessDamageEvent <- DamageHitInfo
+'Weapon::SpecialAttack --> Player
+'Weapon::StandardAttack --> Player
 
 InputManager -> Weapon : Event Invoke
 WeaponManager *-- Weapon
