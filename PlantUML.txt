@@ -19,12 +19,9 @@ class Player
   +void ProcessDamageEvent(DamageHitInfo _damageHitInfo)
 }
 
-Player *-- WeaponManager
-Player *-- KeepsakeManager
-
 static class EventManager
 {
-  +Action<HitInfo hit> OnPlayerAttack;
+  +Action<Damage damageInfo> OnPlayerAttack
   +Action OnPlayerSpawn;
 }
 
@@ -33,6 +30,10 @@ class Blackboard
   +int PlayerHealth;
   +int PlayerMoneyAmount;
 }
+
+Player *-- WeaponManager
+Player *-- KeepsakeManager
+Player .u. EventManager
 
 'Weapon System
 struct Damage
@@ -126,34 +127,27 @@ class KeepsakeListener
   +Action GetEvent(KeepsakeEventType eventType);
 }
 
-enum KeepsakeEventType
+struct KeepsakeContext
 {
-  ON_PLAYER_HIT,
-  ON_PLAYER_ATTACK,
+  +Damage DamageInfo;
 }
 
-IKeepsake .. KeepsakeListener
+enum KeepsakeEventType
+{
+  ON_PLAYER_SPAWN,
+  ON_PLAYER_ATTACK,
+  ON_PLAYER_HIT,
+}
+
+IKeepsake::OnEventCalled .. KeepsakeListener
 KeepsakeManager *-- KeepsakeInventory
 KeepsakeManager *-- KeepsakeListener
 KeepsakeInventory *-- IKeepsake
 KeepsakeListener o-- KeepsakeEventType
+KeepsakeListener o-- KeepsakeContext
 
 'Keepsake Variants
-class DamageKeepsake
-{
-   +void Register();
-   +void Unregister();
-   #void OnEventCalled(KeepsakeContext context);
-}
-
-class HealthKeepsake
-{
-   +void Register();
-   +void Unregister();
-   #void OnEventCalled(KeepsakeContext context);
-}
-
-DamageKeepsake -u-|> IKeepsake
-HealthKeepsake -u-|> IKeepsake
+class DamageKeepsake extends IKeepsake
+class HealthKeepsake extends IKeepsake
 
 @enduml
