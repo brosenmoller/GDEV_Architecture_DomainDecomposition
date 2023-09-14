@@ -5,7 +5,7 @@ title Hades - UML
 header
   Assignment for HKU Game Dev Architecture
   Weapon System : Ben Rosenmöller
-  KeepsakeSystem : Joeri van Alphen
+  Keepsake System : Joeri van Alphen
 endheader
 
 'General Code
@@ -14,8 +14,8 @@ class Player
   +int Health
   -WeaponManager weaponManager;
   -KeepsakeManager keepsakeManager;
+  +void ProcessDamageEvent(DamageHitInfo _damageHitInfo)
 }
-
 
 Player *-- WeaponManager
 Player *-- KeepsakeManager
@@ -28,6 +28,24 @@ struct Damage
   +bool IsPoisned;
 }
 
+struct DamageHitInfo 
+{
+  +bool BackstabDamage;
+  +bool RangedDamage;
+  +bool StandardAttackDamage;
+  +bool SpecialAttackDamage;
+  +bool DashAttackDamage;
+  +WeaponData WeaponData
+  +Enemy DamagedEnemy;
+}
+
+struct WeaponData 
+{
+  +int StandardAttackDamage;
+  +int SpecialAttackDamage;
+  +int DashAttackDamage;
+}
+
 interface IDamageable
 {
   +void TakeDamage(Damage damage);
@@ -35,19 +53,35 @@ interface IDamageable
 
 abstract class Weapon
 {
-  +void ApplyEffect(out Damage damage);
+  WeaponData baseWeaponData;
+  +abstract void ApplyEffect(out Damage damage);
+  +abstract void SpecialAttack();
+  +abstract void StandardAttack();
 }
+
+skinparam groupInheritance 10
+class StygianSword extends Weapon
+class VarathaSpear extends Weapon
+class AegisShield extends Weapon
+class CoronachBow extends Weapon
+class MalphonTwinfists extends Weapon
+class ExagryphGun extends Weapon
 
 class WeaponManager
 {
   -Weapon[] unlockedWeapons;
-  -Weapon[] equipedWeapons;
+  -Weapon equipedWeapon;
 }
 
-WeaponManager *-- Weapon
-Weapon .. Damage
-IDamageable .. Damage
+Weapon::baseWeaponData -r-> WeaponData
+Player::ProcessDamageEvent <- DamageHitInfo
+'Weapon::SpecialAttack --> Player
+'Weapon::StandardAttack --> Player
 
+InputManager -> Weapon : Event Invoke
+WeaponManager *-- Weapon
+Damage -d-o Weapon
+Damage -l-o IDamageable
 
 'KeepsakeSystem
 class KeepsakeManager
