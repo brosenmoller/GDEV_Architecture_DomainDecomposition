@@ -68,20 +68,19 @@ interface IKeepsake
 {
    +void Register();
    +void Unregister();
-   -void OnEventCalled(KeepsakeContext context);
+   #void OnEventCalled(KeepsakeContext context);
 }
 
 class KeepsakeManager
 {
   -KeepsakeInventory Inventory;
   -KeepsakeListener Listener;
-  #void OnEventCalled();
 }
 
 class KeepsakeInventory
 {
-  -Keepsake[] unlockedKeepsakes;
-  -Keepsake[] equipedKeepsakes;
+  -IKeepsake[] unlockedKeepsakes;
+  -IKeepsake[] equipedKeepsakes;
   
   +void Add(Keepsake keepsake);
   +void Set(int slot, Keepsake Keepsake);
@@ -90,7 +89,7 @@ class KeepsakeInventory
 class KeepsakeListener
 {
   -Dictionary<KeepsakeEventType, Action> events
-  +GetEvent(KeepsakeEventType eventType);
+  +Action GetEvent(KeepsakeEventType eventType);
 }
 
 enum KeepsakeEventType
