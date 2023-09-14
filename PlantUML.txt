@@ -11,16 +11,16 @@ header
 endheader
 
 'General Code
-class Player
+class PlayerCombatManager
 {
   +int Health
   -WeaponManager weaponManager;
   -KeepsakeManager keepsakeManager;
-  +void ProcessDamageEvent(DamageHitInfo _damageHitInfo)
+  +void ProcessDamageEvent(Damage _damage)
 }
 
-Player *-- WeaponManager
-Player *-- KeepsakeManager
+PlayerCombatManager *-- WeaponManager
+PlayerCombatManager *-- KeepsakeManager
 
 static class EventManager
 {
@@ -35,8 +35,9 @@ class Blackboard
 }
 
 'Weapon System
-struct Damage
+class Damage
 {
+  +DamageHitInfo hitInfo;
   +int MainDamage;
   +int BackstabDamage;
   +bool IsPoisned;
@@ -50,7 +51,7 @@ struct DamageHitInfo
   +bool SpecialAttackDamage;
   +bool DashAttackDamage;
   +WeaponData WeaponData
-  +Enemy DamagedEnemy;
+  +IDamageable damangeAble;
 }
 
 struct WeaponData 
@@ -68,7 +69,6 @@ interface IDamageable
 abstract class Weapon
 {
   WeaponData baseWeaponData;
-  +abstract void ApplyEffect(out Damage damage);
   +abstract void SpecialAttack();
   +abstract void StandardAttack();
 }
@@ -87,15 +87,18 @@ class WeaponManager
   -Weapon equipedWeapon;
 }
 
-Weapon::baseWeaponData -r-> WeaponData
-Player::ProcessDamageEvent <- DamageHitInfo
+Weapon::baseWeaponData -u--> WeaponData
+Weapon::StandardAttack .. DamageHitInfo
+Weapon::SpecialAttack .. DamageHitInfo
 'Weapon::SpecialAttack --> Player
 'Weapon::StandardAttack --> Player
 
-InputManager -> Weapon : Event Invoke
+Weapon::SpecialAttack <-l InputManager
+Weapon::StandardAttack <-l InputManager
 WeaponManager *-- Weapon
-Damage -d-o Weapon
-Damage -l-o IDamageable
+Damage .d. DamageHitInfo
+PlayerCombatManager .d. Damage
+PlayerCombatManager::ProcessDamageEvent -l-> IDamageable
 
 'Keepsake System
 interface IKeepsake
