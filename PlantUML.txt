@@ -20,13 +20,13 @@ class PlayerCombatManager
 class EventManager
 {
   +Action<Damage damageInfo> OnPlayerAttack
-  +Action OnPlayerSpawn;
+  +Action OnPlayerSpawn
 }
 
 class Blackboard
 {
-  +int PlayerHealth;
-  +int PlayerMoneyAmount;
+  +int PlayerHealth
+  +int PlayerMoneyAmount
 }
 
 PlayerCombatManager *-- WeaponManager
@@ -97,53 +97,53 @@ PlayerCombatManager::ProcessDamageEvent -l-> IDamageable
 'Keepsake System
 interface IKeepsake
 {
-   +void Register();
-   +void Unregister();
-   #void OnEventCalled(KeepsakeContext context);
+   +void Register()
+   +void Unregister()
+   #void OnEventCalled(KeepsakeContext context)
 }
 
 class KeepsakeManager
 {
-  -KeepsakeInventory Inventory;
-  -KeepsakeListener Listener;
+  -KeepsakeInventory Inventory
+  -KeepsakeListener Listener
 }
 
 class KeepsakeInventory
 {
-  -IKeepsake[] unlockedKeepsakes;
-  -IKeepsake[] equipedKeepsakes;
-  
-  +void Add(Keepsake keepsake);
-  +void Set(int slot, Keepsake Keepsake);
+  -List<IKeepsake> unlockedKeepsakes
+  -IKeepsake[] equipedKeepsakes
+  +void Add(Keepsake keepsake)
+  +void Set(int slot, Keepsake Keepsake)
 }
 
 class KeepsakeListener
 {
-  -Dictionary<KeepsakeEventType, Action> events
-  +Action GetEvent(KeepsakeEventType eventType);
+  -Dictionary<KeepsakeEventType, Action<KeepsakeContext>> events
+  +Action GetEvent(KeepsakeEventType eventType)
 }
 
 struct KeepsakeContext
 {
-  +Damage DamageInfo;
+  +Damage DamageInfo
 }
 
 enum KeepsakeEventType
 {
-  ON_PLAYER_SPAWN,
-  ON_PLAYER_ATTACK,
-  ON_PLAYER_HIT,
+  ON_PLAYER_SPAWN
+  ON_PLAYER_ATTACK
+  ON_PLAYER_HIT
 }
 
-IKeepsake::OnEventCalled .. KeepsakeListener
+IKeepsake::OnEventCalled -- KeepsakeListener
 KeepsakeManager *-- KeepsakeInventory
 KeepsakeManager *-- KeepsakeListener
-KeepsakeInventory *-- IKeepsake
-KeepsakeListener o-- KeepsakeEventType
-KeepsakeListener o-- KeepsakeContext
+KeepsakeInventory o-- IKeepsake
+KeepsakeListener *-- KeepsakeEventType
+KeepsakeListener -- KeepsakeContext
 
 'Keepsake Variants
-class DamageKeepsake extends IKeepsake
-class HealthKeepsake extends IKeepsake
+class BlackShawl extends IKeepsake
+class SkullEarring extends IKeepsake
+class OldSpikedCollar extends IKeepsake
 
 @enduml
