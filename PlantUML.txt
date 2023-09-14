@@ -78,7 +78,7 @@ class KeepsakeManager
 {
   -KeepsakeInventory Inventory;
   -KeepsakeListener Listener;
-  -void OnEventCalled(KeepsakeContext context);
+  -void OnEventCalled();
 }
 
 class KeepsakeInventory
@@ -92,24 +92,41 @@ class KeepsakeInventory
 
 class KeepsakeListener
 {
-  +Action<KeepsakeContext> OnEventCalled;
-  -void OnDamageDealt(HitInfo info);
-  -void OnSomethingHappened();
+  -Dictionary<KeepsakeEventType, Action> events
+  +GetEvent(KeepsakeEventType eventType);
 }
 
-class KeepsakeContext
+enum KeepsakeEventType
 {
-  +HealthContext Context;
-  +HitInfo Hit;
+  ON_PLAYER_HIT,
+  ON_PLAYER_ATTACK,
 }
 
-IKeepsake o-- KeepsakeContext
+IKeepsake .. KeepsakeListener
 KeepsakeManager *-- KeepsakeInventory
 KeepsakeManager *-- KeepsakeListener
 KeepsakeInventory *-- IKeepsake
-KeepsakeListener .. KeepsakeContext
-KeepsakeListener .. EventManager
+KeepsakeListener o-- KeepsakeEventType
 
 'Keepsake Variants
+class BaseDecorator
+{
+  -IKeepsake keepsakeBase
+  +void OnEventCalled();
+}
+
+class AddHealthDecorator
+{
+  +void OnEventCalled();
+}
+
+class AddDamageDecorator
+{
+  +void OnEventCalled();
+}
+
+BaseDecorator --> IKeepsake
+AddHealthDecorator --> BaseDecorator
+AddDamageDecorator --> BaseDecorator
 
 @enduml
