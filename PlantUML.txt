@@ -34,9 +34,6 @@ class Blackboard
   +int PlayerMoneyAmount;
 }
 
-Blackboard .. Player
-EventManager .. Player
-
 'Weapon System
 struct Damage
 {
@@ -78,7 +75,7 @@ class KeepsakeManager
 {
   -KeepsakeInventory Inventory;
   -KeepsakeListener Listener;
-  -void OnEventCalled();
+  #void OnEventCalled();
 }
 
 class KeepsakeInventory
@@ -109,24 +106,21 @@ KeepsakeInventory *-- IKeepsake
 KeepsakeListener o-- KeepsakeEventType
 
 'Keepsake Variants
-class BaseDecorator
+class DamageKeepsake
 {
-  -IKeepsake keepsakeBase
-  +void OnEventCalled();
+   +void Register();
+   +void Unregister();
+   #void OnEventCalled(KeepsakeContext context);
 }
 
-class AddHealthDecorator
+class HealthKeepsake
 {
-  +void OnEventCalled();
+   +void Register();
+   +void Unregister();
+   #void OnEventCalled(KeepsakeContext context);
 }
 
-class AddDamageDecorator
-{
-  +void OnEventCalled();
-}
-
-BaseDecorator --> IKeepsake
-AddHealthDecorator --> BaseDecorator
-AddDamageDecorator --> BaseDecorator
+DamageKeepsake -u-|> IKeepsake
+HealthKeepsake -u-|> IKeepsake
 
 @enduml
