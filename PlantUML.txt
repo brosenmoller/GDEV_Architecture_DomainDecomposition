@@ -1,5 +1,3 @@
-@enduml
-
 @startuml
 !theme carbon-gray
 
@@ -14,12 +12,12 @@ endheader
 class PlayerCombatManager
 {
   +int Health
-  -WeaponManager weaponManager;
-  -KeepsakeManager keepsakeManager;
+  -WeaponManager weaponManager
+  -KeepsakeManager keepsakeManager
   +void ProcessDamageEvent(Damage _damage)
 }
 
-static class EventManager
+class EventManager
 {
   +Action<Damage damageInfo> OnPlayerAttack
   +Action OnPlayerSpawn;
@@ -38,61 +36,56 @@ PlayerCombatManager .u. EventManager
 'Weapon System
 class Damage
 {
-  +DamageHitInfo hitInfo;
-  +int MainDamage;
-  +int BackstabDamage;
-  +bool IsPoisned;
+  +DamageHitInfo hitInfo
+  +int MainDamage
+  +int BackstabDamage
+  +bool IsPoisned
 }
 
 struct DamageHitInfo 
 {
-  +bool BackstabDamage;
-  +bool RangedDamage;
-  +bool StandardAttackDamage;
-  +bool SpecialAttackDamage;
-  +bool DashAttackDamage;
+  +bool BackstabDamage
+  +bool RangedDamage
+  +bool StandardAttackDamage
+  +bool SpecialAttackDamage
+  +bool DashAttackDamage
   +WeaponData WeaponData
-  +IDamageable damangeAble;
+  +IDamageable damangeAble
 }
 
 struct WeaponData 
 {
-  +int StandardAttackDamage;
-  +int SpecialAttackDamage;
-  +int DashAttackDamage;
+  +int StandardAttackDamage
+  +int SpecialAttackDamage
+  +int DashAttackDamage
 }
 
 interface IDamageable
 {
-  +void TakeDamage(Damage damage);
+  +void TakeDamage(Damage damage)
 }
 
 abstract class Weapon
 {
-  WeaponData baseWeaponData;
-  +abstract void SpecialAttack();
-  +abstract void StandardAttack();
+  WeaponData baseWeaponData
+  +abstract void SpecialAttack()
+  +abstract void StandardAttack()
 }
 
 skinparam groupInheritance 10
 class StygianSword extends Weapon
 class VarathaSpear extends Weapon
 class AegisShield extends Weapon
-class CoronachBow extends Weapon
-class MalphonTwinfists extends Weapon
-class ExagryphGun extends Weapon
 
 class WeaponManager
 {
-  -Weapon[] unlockedWeapons;
-  -Weapon equipedWeapon;
+  -Weapon[] unlockedWeapons
+  -Weapon equipedWeapon
 }
 
-Weapon::baseWeaponData -u--> WeaponData
-Weapon::StandardAttack .. DamageHitInfo
-Weapon::SpecialAttack .. DamageHitInfo
-'Weapon::SpecialAttack --> Player
-'Weapon::StandardAttack --> Player
+Weapon::baseWeaponData *-u- WeaponData
+Weapon::StandardAttack .r. DamageHitInfo
+Weapon::SpecialAttack .r. DamageHitInfo
 
 Weapon::SpecialAttack <-l InputManager
 Weapon::StandardAttack <-l InputManager
