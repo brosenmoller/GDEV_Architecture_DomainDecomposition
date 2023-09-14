@@ -1,3 +1,5 @@
+@enduml
+
 @startuml
 !theme carbon-gray
 
@@ -19,6 +21,21 @@ class Player
 
 Player *-- WeaponManager
 Player *-- KeepsakeManager
+
+static class EventManager
+{
+  +Action<HitInfo hit> OnPlayerAttack;
+  +Action OnPlayerSpawn;
+}
+
+class Blackboard
+{
+  +int PlayerHealth;
+  +int PlayerMoneyAmount;
+}
+
+Blackboard .. Player
+EventManager .. Player
 
 'Weapon System
 struct Damage
@@ -77,7 +94,7 @@ class KeepsakeListener
 {
   +Action<KeepsakeContext> OnEventCalled;
   -void OnDamageDealt(HitInfo info);
-  -void OnSomethingHappened(Info info);
+  -void OnSomethingHappened();
 }
 
 class KeepsakeContext
@@ -91,6 +108,7 @@ KeepsakeManager *-- KeepsakeInventory
 KeepsakeManager *-- KeepsakeListener
 KeepsakeInventory *-- IKeepsake
 KeepsakeListener .. KeepsakeContext
+KeepsakeListener .. EventManager
 
 'Keepsake Variants
 
