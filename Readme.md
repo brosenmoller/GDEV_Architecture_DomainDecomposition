@@ -1,3 +1,6 @@
+## About
+Made by Joeri van Alphen and Ben Rosenmöller for Game dev Module HKU
+
 ## Links:
 
 **Plant UML**
